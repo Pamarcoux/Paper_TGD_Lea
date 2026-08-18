@@ -5,29 +5,38 @@ if (!require("pacman")) install.packages("pacman")
 pacman::p_load(
   tidyverse, here, patchwork, ggpubr, reshape2, paletteer, 
   RColorBrewer, gridExtra, cowplot,
-  magick, grid, rio, stringr, pheatmap, ggnewscale, rstatix,renv
+  magick, grid, rio, stringr, pheatmap, ggnewscale, rstatix,renv,ggnewscale
+
 )
 
 #### Style ####
 palette_TDG <- c(
-  "Frais" = "#0072B2",
-  "Congelé" = "#009E73",
-  "Purifié" = "#CC79A7"
+  "Fresh" = "#0072B2",
+  "Thaw" = "#009E73",
+  "Purified" = "#CC79A7",
+  "Non Purified" = "#0072B2"
 )
 
 palette_TDG_pastel <- c(
-  "Frais" = "#A8CBE3",
-  "Congelé" = "#A9DEE2",
-  "Purifié" = "#C9A9D3"
+  "Fresh" = "#A8CBE3",
+  "Thaw" = "#97C1A9",
+  "Purified" = "#C9A9D3"
 )
 palette_ICP <- c(
   "BTLA" = "#3B5B92",
   "CD16" = "#B45F5F",
   "CD39" = "#4F8A7A",
-  "LAG3" = "#8A6BAE",
-  "PD1" = "#C58A3A",
+  "LAG-3" = "#8A6BAE",
+  "PD-1" = "#C58A3A",
   "TIGIT" = "#5E7F9F",
-  "TIM3" = "#A65E86"
+  "TIM-3" = "#A65E86"
+)
+
+palette_diff <- c(
+  "Naive \n CD45RA+ CCR7+" = "#3B5B92",
+  "Central memory \n CD45RA- CCR7+" = "#4F8A7A",
+  "Effector memory \n CD45RA- CCR7-" = "#C58A3A",
+  "Terminal effector memory \n CD45RA+ CCR7-" = "#A65E86"
 )
 
 theme_blood <- function() {
