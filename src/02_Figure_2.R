@@ -14,7 +14,7 @@ Df_Per_d1_d2_comparaison <- import("./data/DF/260817_Datas_CD3_d1_or_d2.ods") |>
 
 plot_Per_d1_d2_comparison <- ggplot(Df_Per_d1_d2_comparaison, aes(x = Thaw, y = Per_delta)) +
   facet_wrap(~Type_delta, strip.position = "top" )+
-  geom_jitter(aes(color = Thaw), width = 0.20, height = 0,size = 1.7, alpha = 0.75) +
+  geom_beeswarm(aes(color = Thaw), cex = 4, size = 1.7, alpha = 0.75)+
   scale_color_manual(values = palette_TDG_pastel) +
   ggnewscale::new_scale_color() +
   stat_summary(aes(color = Thaw),fun = mean,geom = "crossbar", width = 0.6,
@@ -63,7 +63,7 @@ Df_icp_on_use_comparaison_paired <- Df_icp_on_use |>
 plot_icp_on_use_comparison_thaw <- ggplot(Df_icp_on_use_comparaison_paired, aes(x = Thaw, y = Per_ICP)) +
   geom_line(aes(group = Donor), alpha = 0.15) +
   facet_wrap(~ICP, strip.position = "top", nrow = 2 )+
-  geom_jitter(aes(color = Thaw), width = 0, height = 0, size = 1.7, alpha = 0.75) +
+  geom_beeswarm(aes(color = Thaw), cex = 4, size = 1.7, alpha = 0.75)+
   scale_color_manual(values = palette_TDG_pastel) +
   ggnewscale::new_scale_color() +
   stat_summary(aes(color = Thaw),fun = mean,geom = "crossbar", width = 0.6,
@@ -98,7 +98,7 @@ Df_icp_on_use_comparaison_purif <- Df_icp_on_use |>
 plot_icp_on_use_comparison_purification <- ggplot(Df_icp_on_use_comparaison_purif, aes(x = Purif, y = Per_ICP)) +
   geom_line(aes(group = Donor), alpha = 0.15) +
   facet_wrap(~ICP, strip.position = "top", nrow = 2 )+
-  geom_jitter(aes(color = Purification), width = 0, height = 0, size = 1.7, alpha = 0.75) +
+  geom_beeswarm(aes(color = Purification), cex = 4, size = 1.7, alpha = 0.75)+
   scale_color_manual(values = palette_TDG_pastel) +
   ggnewscale::new_scale_color() +
   stat_summary(aes(color = Purif),fun = mean,geom = "crossbar", width = 0.6,

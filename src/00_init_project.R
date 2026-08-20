@@ -5,7 +5,8 @@ if (!require("pacman")) install.packages("pacman")
 pacman::p_load(
   tidyverse, here, patchwork, ggpubr, reshape2, paletteer, 
   RColorBrewer, gridExtra, cowplot,
-  magick, grid, rio, stringr, pheatmap, ggnewscale, rstatix,renv,ggnewscale
+  magick, grid, rio, stringr, pheatmap, ggnewscale, rstatix,renv,ggnewscale,
+  ggbeeswarm
 
 )
 

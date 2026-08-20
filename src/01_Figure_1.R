@@ -32,9 +32,9 @@ Df_CD3g9_upon_culture_D0 <- Df_CD3g9_upon_culture |>
   mutate(Days = "Day 0")
 
 
-ggplot(Df_CD3g9_upon_culture_D0,aes(x = Days, y = Per_CD3_g9)) +
-  geom_jitter(width = 0.20, height = 0, size = 1.7, alpha = 0.75,
-  color = palette_TDG_pastel["Fresh"]) +
+plot_CD3g9_D0 <- ggplot(Df_CD3g9_upon_culture_D0,aes(x = Days, y = Per_CD3_g9)) +
+  geom_beeswarm(cex = 4.5, size = 1.7, alpha = 0.75,corral = "wrap", corral.width = 0.6,
+                color = palette_TDG_pastel["Fresh"]) +
   stat_summary(fun = mean, geom = "crossbar", width = 0.6, linewidth = 1.2,
     fatten = 1,
     color = palette_TDG["Fresh"]) +
@@ -90,10 +90,7 @@ Df_Per_d1_d2_fresh <-   Df_Per_d1_d2 |>
   filter(Thaw == "Fresh", !is.na(Per_delta))
     
 plot_Per_d1_d2 <- ggplot(Df_Per_d1_d2_fresh, aes(x = Type_delta, y = Per_delta)) +
-    geom_jitter(width = 0.20, 
-                height = 0, 
-                size = 1.7, 
-                alpha = 0.75, 
+  geom_beeswarm(cex = 4, size = 1.7, alpha = 0.75,
                 color = palette_TDG_pastel["Fresh"]) +
     stat_summary(fun = mean, 
                  geom = "crossbar", 
@@ -112,10 +109,7 @@ plot_Per_d1_d2 <- ggplot(Df_Per_d1_d2_fresh, aes(x = Type_delta, y = Per_delta))
 # ggplot(Df_Per_d1_d2_fresh, aes(x = Type_delta, y = Per_delta)) +
 #   geom_boxplot(position = position_dodge(0.8), outliers = FALSE, colour = "black", size = 0.5,
 #                fill = palette_TDG_pastel["Fresh"] ) +
-#   geom_jitter(width = 0.20, 
-#               height = 0, 
-#               size = 1.8, 
-#               alpha = 0.75, 
+# geom_beeswarm(cex = 3, size = 1.7, alpha = 0.75,
 #               color = palette_TDG["Fresh"]) +
 #   stat_compare_means(
 #     method = "wilcox.test", aes(group = Type_delta), hide.ns = FALSE, paired = TRUE,
@@ -168,7 +162,7 @@ Df_icp_on_use_fresh <- Df_icp_on_use |>
 plot_icp_on_use_fresh <- ggplot(Df_icp_on_use_fresh, aes(x = ICP, y = Per_ICP)) +
   facet_wrap(~ICP, scales = "free_x", nrow = 2,
              strip.position = "top") +
-  geom_jitter(width = 0.20, height = 0, size = 1.7, alpha = 0.75,
+  geom_beeswarm(cex = 8, size = 1.7, alpha = 0.75,corral = "wrap", corral.width = 0.6,
               color = palette_TDG_pastel["Fresh"]) +
   stat_summary(fun = mean, geom = "crossbar", width = 0.6, linewidth = 1.2,
                fatten = 1,
@@ -184,7 +178,7 @@ plot_icp_on_use_fresh <- ggplot(Df_icp_on_use_fresh, aes(x = ICP, y = Per_ICP)) 
 #   facet_wrap(~ICP, scales = "free_x", nrow = 2,
 #              strip.position = "bottom") +
 #   geom_boxplot(color = palette_TDG["Fresh"])+
-#   geom_jitter(width = 0.20, height = 0, size = 2, alpha = 0.75,
+# geom_beeswarm(cex = 3, size = 1.7, alpha = 0.75,
 #               color = palette_TDG_pastel["Fresh"]) +
 #   theme_blood() +
 #   theme(strip.text = element_blank())+
