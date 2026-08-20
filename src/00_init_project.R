@@ -3,11 +3,8 @@
 if (!require("pacman")) install.packages("pacman")
 
 pacman::p_load(
-  tidyverse, here, patchwork, ggpubr, reshape2, paletteer, 
-  RColorBrewer, gridExtra, cowplot,
-  magick, grid, rio, stringr, pheatmap, ggnewscale, rstatix,renv,ggnewscale,
-  ggbeeswarm
-
+  tidyverse, here, ggpubr,cowplot,
+  magick, rio, ggnewscale, renv, ggbeeswarm
 )
 
 #### Style ####
@@ -39,6 +36,16 @@ palette_diff <- c(
   "Effector memory \n CD45RA- CCR7-" = "#C58A3A",
   "Terminal effector memory \n CD45RA+ CCR7-" = "#A65E86"
 )
+
+recode_donor_tgd <- function(df) {
+  dplyr::mutate(df, Donor = dplyr::recode(Donor,
+    "BC240112A*_1" = "BC240112A_1*",
+    "BC230331A*_1" = "BC230331A_1*",
+    "BC231020A*_1" = "BC231020A_1*",
+    "BC240322A*_1" = "BC240322A_1*",
+    "BC240209B*_1" = "BC240209B_1*"
+  ))
+}
 
 theme_blood <- function() {
   theme_classic() +  # Fond classique et épuré

@@ -1,8 +1,8 @@
 ####Figure 1 Papier Léa TGD ####
-source("./src/00_init_project.R")
+source(here::here('src/00_init_project.R'))
 
 ##### Workflow ##### 
-Workflow_png <- magick::image_read("./data/Workflow.png")
+Workflow_png <- magick::image_read(here('data/Workflow.png'))
 
 workflow_plot <- ggplot() +
   annotation_custom(
@@ -12,7 +12,7 @@ workflow_plot <- ggplot() +
   theme_void()
 
 ##### Pheno J0####
-Df_CD3g9_upon_culture <- import("./data/DF/260817_Datas_CD3g9_upon_culture.ods") |> 
+Df_CD3g9_upon_culture <- import(here('data/DF/260817_Datas_CD3g9_upon_culture.ods')) |>
   mutate(Thaw = if_else(str_detect(Donor, "\\*$"), "Thaw", "Fresh")) |> 
   pivot_longer(cols = where(is.numeric),
                names_to = "Days",
@@ -78,7 +78,7 @@ plot_culture_longitudinal <- ggplot(Df_CD3g9_upon_culture_longitudinal,
   
 
 ##### % d1 or d2 ####
-Df_Per_d1_d2 <- import("./data/DF/260817_Datas_CD3_d1_or_d2.ods") |> 
+Df_Per_d1_d2 <- import(here('data/DF/260817_Datas_CD3_d1_or_d2.ods')) |>
     mutate(Donor = recode(Donor,"BC240112A*_1" = "BC240112A_1*")) |> 
     mutate(Thaw = if_else(str_detect(Donor, "\\*$"), "Thaw", "Fresh")) |> 
     pivot_longer(cols = where(is.numeric),
@@ -100,6 +100,7 @@ plot_Per_d1_d2 <- ggplot(Df_Per_d1_d2_fresh, aes(x = Type_delta, y = Per_delta))
                  color = palette_TDG["Fresh"]) +
   stat_compare_means(
     method = "wilcox.test", aes(group = Type_delta), hide.ns = FALSE, paired = TRUE,
+    p.adjust.method = "BH",
     label = "p.signif", size = 3, vjust = 1, hjust = 0.5, label.x.npc = "middle")+
     theme_blood() +
   theme(axis.text.x = element_text(size = 8, face = "bold", color = "black")) +
@@ -119,7 +120,7 @@ plot_Per_d1_d2 <- ggplot(Df_Per_d1_d2_fresh, aes(x = Type_delta, y = Per_delta))
 #   labs(x = "", y = "% of CD3γ9 cells at D17")
 
 ##### Evolution ICP #####
-Df_icp_upon_culture <- import('./data/DF/260817_Datas_ICP_culture.ods') |> 
+Df_icp_upon_culture <- import(here('data/DF/260817_Datas_ICP_culture.ods')) |>
   rename(Days = "Day of culture") |> 
   pivot_longer(cols = c(where(is.numeric),-Days),
                names_to = "ICP",
@@ -143,12 +144,8 @@ plot_icp_upon_culture <- ggplot(Df_icp_upon_culture,aes(x = Days, y = Per_ICP, c
   theme(legend.position = "right")
 
 ##### Per ICP at Day of use ####
-Df_icp_on_use <- import("./data/DF/260414_Datas_phenotyping_%_RFI_tidy.xlsx") |> 
-  mutate(Donor = recode(Donor,"BC240112A*_1" = "BC240112A_1*",
-                              "BC230331A*_1" = "BC230331A_1*",
-                              "BC231020A*_1" = "BC231020A_1*",
-                              "BC240322A*_1" = "BC240322A_1*",
-                              "BC240209B*_1" = "BC240209B_1*")) |> 
+Df_icp_on_use <- import(here('data/DF/260414_Datas_phenotyping_%_RFI_tidy.xlsx')) |> 
+  recode_donor_tgd() |> 
   mutate(Thaw = if_else(str_detect(Donor, "\\*$"), "Thaw", "Fresh"))
 
 Df_icp_on_use_fresh <- Df_icp_on_use |>
@@ -203,7 +200,7 @@ Figure_1 <- plot_grid(
 print(Figure_1)
   
   ggsave(
-    filename = "./outputs/Figures/Figure_Lea_1.png",
+    filename = here('outputs/Figures/Figure_Lea_1.png'),
     plot = Figure_1,
     device = "png",
     width = 34, # largeur A4 en cm

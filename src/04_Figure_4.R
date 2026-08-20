@@ -1,15 +1,9 @@
-set.seed(54645)
-
-####Figure 3 Papier Léa TGD ####
-source("./src/00_init_project.R")
+####Figure 4 Papier Léa TGD ####
+source(here::here('src/00_init_project.R'))
 
 #### Depletion GA ####
-Df_depletion <- import("./data/DF/260512_Normalized_depletion_All.xlsx") |> 
-  mutate(Donor = recode(Donor,"BC240112A*_1" = "BC240112A_1*",
-                        "BC230331A*_1" = "BC230331A_1*",
-                        "BC231020A*_1" = "BC231020A_1*",
-                        "BC240322A*_1" = "BC240322A_1*",
-                        "BC240209B*_1" = "BC240209B_1*")) |> 
+Df_depletion <- import(here('data/DF/260512_Normalized_depletion_All.xlsx')) |> 
+  recode_donor_tgd() |> 
   mutate(Thaw = if_else(str_detect(Donor, "\\*$"), "Thaw", "Fresh")) |> 
   mutate(Purif = if_else(Purified == "Yes", "Purified", "Non Purified"))   |> 
   mutate(Purification = if_else(Purif == "Purified", "Purified", Thaw),
@@ -38,7 +32,7 @@ plot_depletion_GA101 <- ggplot(Df_depletion_longer, aes(x = Purif, y = Per_Deple
   ggnewscale::new_scale_color() +
   geom_beeswarm(aes(color = Purification), cex = 4, corral = "wrap", corral.width = 0.6, size = 1.7, alpha = 0.75) +
   scale_color_manual(values = palette_TDG_pastel) +
-  stat_compare_means(method = "wilcox.test",aes(group = Purif), hide.ns = FALSE,
+  stat_compare_means(method = "wilcox.test", p.adjust.method = "BH", aes(group = Purif), hide.ns = FALSE,
                      paired = FALSE,label = "p.signif", size = 3, vjust = 1, hjust = 0.5, label.x.npc = "middle") +
   theme_blood() +
   theme(strip.text = element_text(size = 8, face = "bold"),
@@ -154,7 +148,7 @@ plot_depletion_GA101_Fcblock <- ggplot(Df_depletion_longer_Fc_Block, aes(x = FcB
   ggnewscale::new_scale_color() +
   geom_point(aes(color = Purification),size = 1.7, alpha = 0.75) +
   scale_color_manual(values = palette_TDG_pastel) +
-  stat_compare_means(method = "wilcox.test",aes(group = FcBlock_reel), hide.ns = FALSE,
+  stat_compare_means(method = "wilcox.test", p.adjust.method = "BH", aes(group = FcBlock_reel), hide.ns = FALSE,
                      paired = TRUE,label = "p.signif", size = 3, vjust = 1, hjust = 0.5, label.x.npc = "middle") +
   theme_blood() +
   theme(strip.text = element_text(size = 8, face = "bold"),
@@ -164,12 +158,8 @@ plot_depletion_GA101_Fcblock <- ggplot(Df_depletion_longer_Fc_Block, aes(x = FcB
 
 #### CD107a ####
 #Preparation
-Df_cd107a <- import("./data/DF/260520_Datas_CD107a_Fcblock_Purification_tidy.xlsx") |>
-  mutate(Donor = recode(Donor,"BC240112A*_1" = "BC240112A_1*",
-                        "BC230331A*_1" = "BC230331A_1*",
-                        "BC231020A*_1" = "BC231020A_1*",
-                        "BC240322A*_1" = "BC240322A_1*",
-                        "BC240209B*_1" = "BC240209B_1*")) |> 
+Df_cd107a <- import(here('data/DF/260520_Datas_CD107a_Fcblock_Purification_tidy.xlsx')) |>
+  recode_donor_tgd() |>
   mutate(Thaw = if_else(str_detect(Donor, "\\*$"), "Thaw", "Fresh")) |> 
   mutate(Purif = if_else(Purified == "Yes", "Purified", "Non Purified"))   |> 
   mutate(Purification = if_else(Purif == "Purified", "Purified", Thaw),
@@ -199,7 +189,7 @@ plot_CD107a_GA101 <- ggplot(Df_cd107a_GA101, aes(x = Purif, y = Per_CD107a)) +
   ggnewscale::new_scale_color() +
   geom_beeswarm(aes(color = Purification), cex = 4, corral = "wrap", corral.width = 0.6, size = 1.7, alpha = 0.75) +
   scale_color_manual(values = palette_TDG_pastel) +
-  stat_compare_means(method = "wilcox.test",aes(group = Purif), hide.ns = FALSE,
+  stat_compare_means(method = "wilcox.test", p.adjust.method = "BH", aes(group = Purif), hide.ns = FALSE,
                      paired = FALSE,label = "p.signif", size = 3, vjust = 1, hjust = 0.5, label.x.npc = "middle") +
   theme_blood() +
   theme(strip.text = element_text(size = 8, face = "bold"),
@@ -258,12 +248,8 @@ plot_CD107a_GA101_purif <- ggplot(Df_cd107a_GA101_purif, aes(x = Conditions, y =
 
 
 #### Granzyme B ####
-Df_granzyme_B <- import("./data/DF/260406_Datas_GrzB_Fcblock_Purification.xlsx") |>
-  mutate(Donor = recode(Donor,"BC240112A*_1" = "BC240112A_1*",
-                        "BC230331A*_1" = "BC230331A_1*",
-                        "BC231020A*_1" = "BC231020A_1*",
-                        "BC240322A*_1" = "BC240322A_1*",
-                        "BC240209B*_1" = "BC240209B_1*")) |> 
+Df_granzyme_B <- import(here('data/DF/260406_Datas_GrzB_Fcblock_Purification.xlsx')) |>
+  recode_donor_tgd() |>
   mutate(Thaw = if_else(str_detect(Donor, "\\*$"), "Thaw", "Fresh")) |> 
   mutate(Purif = if_else(Purified == "Yes", "Purified", "Non Purified"))   |> 
   mutate(Purification = if_else(Purif == "Purified", "Purified", Thaw),
@@ -292,7 +278,7 @@ plot_Granzyme_B_GA101 <- ggplot(Df_granzyme_B_GA101, aes(x = Purif, y = Conc_Grz
   geom_beeswarm(aes(color = Purification), cex = 4, corral = "wrap", corral.width = 0.6,
                 size = 1.7, alpha = 0.75) +
   scale_color_manual(values = palette_TDG_pastel) +
-  stat_compare_means(method = "wilcox.test",aes(group = Purif), hide.ns = FALSE,
+  stat_compare_means(method = "wilcox.test", p.adjust.method = "BH", aes(group = Purif), hide.ns = FALSE,
                      paired = FALSE,label = "p.signif", size = 3, vjust = 1, hjust = 0.5, label.x.npc = "middle") +
   theme_blood() +
   theme(strip.text = element_text(size = 8, face = "bold"),
@@ -362,7 +348,7 @@ Figure_4 <- plot_grid(
 print(Figure_4)
 
 ggsave(
-  filename = "./outputs/Figures/Figure_Lea_4.png",
+  filename = here('outputs/Figures/Figure_Lea_4.png'),
   plot = Figure_4,
   device = "png",
   width = 32, # largeur A4 en cm
@@ -389,7 +375,7 @@ Figure_4_suppl <- plot_grid(
 print(Figure_4_suppl)
 
 ggsave(
-  filename = "./outputs/Figures/Figure_Lea_4_suppl.png",
+  filename = here('outputs/Figures/Figure_Lea_4_suppl.png'),
   plot = Figure_4_suppl,
   device = "png",
   width = 34, # largeur A4 en cm

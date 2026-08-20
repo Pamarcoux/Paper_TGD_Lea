@@ -1,9 +1,9 @@
 ####Figure 2 Papier Léa TGD ####
-source("./src/00_init_project.R")
+source(here::here('src/00_init_project.R'))
 
 #### Comparaison Thaw Fresh ####
 ##### % d1 or d2 ####
-Df_Per_d1_d2_comparaison <- import("./data/DF/260817_Datas_CD3_d1_or_d2.ods") |> 
+Df_Per_d1_d2_comparaison <- import(here('data/DF/260817_Datas_CD3_d1_or_d2.ods')) |>
   mutate(Donor = recode(Donor,"BC240112A*_1" = "BC240112A_1*")) |> 
   mutate(Thaw = if_else(str_detect(Donor, "\\*$"), "Thaw", "Fresh")) |> 
   pivot_longer(cols = where(is.numeric),
@@ -22,7 +22,7 @@ plot_Per_d1_d2_comparison <- ggplot(Df_Per_d1_d2_comparaison, aes(x = Thaw, y = 
     fatten = 1) +
   scale_color_manual(values = palette_TDG) +
   stat_compare_means(method = "wilcox.test",aes(group = Thaw), hide.ns = FALSE,
-    paired = FALSE,label = "p.signif", size = 3, vjust = 1, hjust = 0.5, label.x.npc = "middle") +
+    paired = FALSE, p.adjust.method = "BH", label = "p.signif", size = 3, vjust = 1, hjust = 0.5, label.x.npc = "middle") +
   theme_blood() +
   theme(strip.text = element_text(size = 8, face = "bold"),
         legend.position =  "none") +
@@ -30,13 +30,9 @@ plot_Per_d1_d2_comparison <- ggplot(Df_Per_d1_d2_comparaison, aes(x = Thaw, y = 
 
 ##### Comparison ICP #### 
 #Prep
-Df_icp_on_use <- import("./data/DF/260414_Datas_phenotyping_%_RFI_tidy.xlsx") |> 
-  mutate(Donor = recode(Donor,"BC240112A*_1" = "BC240112A_1*",
-                        "BC230331A*_1" = "BC230331A_1*",
-                        "BC231020A*_1" = "BC231020A_1*",
-                        "BC240322A*_1" = "BC240322A_1*",
-                        "BC240209B*_1" = "BC240209B_1*")) |> 
-  mutate(Thaw = if_else(str_detect(Donor, "\\*$"), "Thaw", "Fresh")) 
+Df_icp_on_use <- import(here('data/DF/260414_Datas_phenotyping_%_RFI_tidy.xlsx')) |> 
+  recode_donor_tgd() |> 
+  mutate(Thaw = if_else(str_detect(Donor, "\\*$"), "Thaw", "Fresh"))
 
 Df_icp_on_use_comparaison_paired <- Df_icp_on_use |>
   mutate(Donor = str_remove(Donor, "\\*$")) |> 
@@ -71,7 +67,7 @@ plot_icp_on_use_comparison_thaw <- ggplot(Df_icp_on_use_comparaison_paired, aes(
     fatten = 1) +
   scale_color_manual(values = palette_TDG) +
   stat_compare_means(method = "wilcox.test",aes(group = Thaw), hide.ns = FALSE,
-                     paired = TRUE,label = "p.signif", size = 3, vjust = 1, hjust = 0.5, label.x.npc = "middle") +
+                      paired = TRUE, p.adjust.method = "BH", label = "p.signif", size = 3, vjust = 1, hjust = 0.5, label.x.npc = "middle") +
   theme_blood() +
   theme(strip.text = element_text(size = 8, face = "bold"),
         legend.title = element_blank(),
@@ -106,7 +102,7 @@ plot_icp_on_use_comparison_purification <- ggplot(Df_icp_on_use_comparaison_puri
                fatten = 1) +
   scale_color_manual(values = palette_TDG) +
   stat_compare_means(method = "wilcox.test", aes(group = Purif), hide.ns = FALSE,
-                     paired = TRUE, label = "p.signif", size = 3, vjust = 1, hjust = 0.5, label.x.npc = "middle") +
+                     paired = TRUE, p.adjust.method = "BH", label = "p.signif", size = 3, vjust = 1, hjust = 0.5, label.x.npc = "middle") +
   theme_blood() +
   theme(strip.text = element_text(size = 8, face = "bold"),
         legend.title = element_blank(),
@@ -116,13 +112,9 @@ plot_icp_on_use_comparison_purification <- ggplot(Df_icp_on_use_comparaison_puri
     y = "% of CD3γ9+ cells expressing ICP \n at day of use")
 
 #### Phenotype differentiation ####
-Df_pheno_differentiation <- import("./data/DF/260515_Datas_Differenciation.xlsx") |> 
-  mutate(Donor = recode(Donor,"BC240112A*_1" = "BC240112A_1*",
-                        "BC230331A*_1" = "BC230331A_1*",
-                        "BC231020A*_1" = "BC231020A_1*",
-                        "BC240322A*_1" = "BC240322A_1*",
-                        "BC240209B*_1" = "BC240209B_1*")) |> 
-  mutate(Thaw = if_else(str_detect(Donor, "\\*$"), "Thaw", "Fresh")) |> 
+Df_pheno_differentiation <- import(here('data/DF/260515_Datas_Differenciation.xlsx')) |> 
+  recode_donor_tgd() |> 
+  mutate(Thaw = if_else(str_detect(Donor, "\\*$"), "Thaw", "Fresh")) |>
   mutate(Purification = if_else(Purified == "Yes", "Purified", Thaw),
          Purification = factor(Purification, levels = c("Fresh","Thaw","Purified"))) |> 
   pivot_longer(cols = c(`Naive CD45RA+ CCR7+`,`Central memory CD45RA- CCR7+`,
@@ -174,7 +166,7 @@ Figure_2 <- plot_grid(
 print(Figure_2)
 
 ggsave(
-  filename = "./outputs/Figures/Figure_Lea_2.png",
+  filename = here('outputs/Figures/Figure_Lea_2.png'),
   plot = Figure_2,
   device = "png",
   width = 34, # largeur A4 en cm
